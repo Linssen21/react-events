@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import {Grid, Button} from 'semantic-ui-react';
 import EventList from '../EventList/EventList'
 import EventForm from '../EventForm/EventForm'
+import cuid from 'cuid';
 
 const eventsDashBoard = [
   {
@@ -75,6 +76,19 @@ const eventsDashBoard = [
       isOpen: false
     })
   }
+
+  handleCreateEvent = (newEvent) => {
+    // create a randomId
+    newEvent.id = cuid()
+    newEvent.hostPhotoURL = '/assets/images/user.png'
+    // spread operator
+    const updatedEvents = [...this.state.events, newEvent]
+    // update State and append events
+    this.setState({
+      events:updatedEvents,
+      isOpen:false
+    })
+  }
   
   render() {
     return (
@@ -86,7 +100,7 @@ const eventsDashBoard = [
           {/* Avoid putting an arrow function it may affect the performance of the app */}
           <Button onClick={this.handleFormOpen('open')} color="blue" content='Create Event'/>
           {this.state.isOpen && 
-          <EventForm handleCancel={this.handleCancel}/>
+          <EventForm createEvent={this.handleCreateEvent} handleCancel={this.handleCancel}/>
         }
         </Grid.Column>
      </Grid>
