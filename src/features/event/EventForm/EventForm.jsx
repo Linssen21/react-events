@@ -1,19 +1,60 @@
 import React, { Component } from 'react'
 import { Segment, Form, Button } from 'semantic-ui-react';
 
+const emptyEvent = {
+  title: '',
+  date: '',
+  city: '',
+  venue: '',
+  hostedBy: ''
+}
+
 class EventForm extends Component {
+
   state = {
-    event: {
-      title: '',
-      date: '',
-      city: '',
-      venue: '',
-      hostedBy: ''
+    event: emptyEvent
+  }
+
+  // LifeCycleEvent
+  componentDidMount(){
+    console.log("Mounted", this.props.selectedEvent)
+    // Check if props has a value and update event state
+    if(this.props.selectedEvent !== null){
+      this.setState({
+        event: this.props.selectedEvent
+      })
     }
   }
+  // Called when receive a props
+  componentWillReceiveProps(nextProps){
+    console.log(`current`, this.props.selectedEvent)
+    console.log(`next `, nextProps.selectedEvent)
+    //  check if next props = current props
+    if(nextProps.selectedEvent !== this.props.selectedEvent){
+      this.setState({
+        event: nextProps.selectedEvent || emptyEvent
+      })
+    }
+  }
+
+  componentWillUnmount(){
+    console.log("unmount")
+  }
+
   onFormSubmit = (evt) => {
     evt.preventDefault();
+    // if value is passed to the form update
+    if(this.state.event.id){
+      this.props.updatedEvent(this.state.event)
+      this.setState({
+        event: emptyEvent
+        })
+    }else{
+      // if empty create new
    this.props.createEvent(this.state.event)
+   
+    }
+    
   }
 
   // Get all event value base on name
